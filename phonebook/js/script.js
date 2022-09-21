@@ -1,6 +1,6 @@
 'use strict';
 
-const data = [
+let data = [
     {
         name: 'Иван',
         surname: 'Петров',
@@ -197,6 +197,7 @@ const data = [
             list: table.tbody,
             logo,
             btnAdd: buttonGroup.btns[0],
+            btnDell: buttonGroup.btns[1],
             formOverlay: form.overlay,
             form: form.form,
         };
@@ -204,6 +205,7 @@ const data = [
 
     const createRow = ({name: firstName, surname, phone}) => {
         const tr = document.createElement('tr');
+        tr.classList.add('contact');
 
         const tdDell = document.createElement('td');
         tdDell.classList.add('delete');
@@ -212,9 +214,11 @@ const data = [
         tdDell.append(buttonDell);
 
         const tdName = document.createElement('td');
+        tdName.classList.add('first-name');
         tdName.textContent = firstName;
 
         const tdSurname = document.createElement('td');
+        tdSurname.classList.add('sur-name');
         tdSurname.textContent = surname;
 
         const tdPhone = document.createElement('td');
@@ -263,7 +267,14 @@ const data = [
         const app = document.querySelector(selectorApp);
         const phoneBook = renderPhoneBook(app, title);
 
-        const {list, logo, btnAdd, formOverlay, form} = phoneBook;
+        const {
+            list,
+            logo,
+            btnAdd,
+            formOverlay,
+            form,
+            btnDell,
+        } = phoneBook;
 
         // Функционал
         const allRow = renderContacts(list, data);
@@ -274,17 +285,71 @@ const data = [
             formOverlay.classList.add('is-visible');
         });
 
-        const formClose = document.querySelector('.close');
-        formClose.addEventListener('click', () => {
-            formOverlay.classList.remove('is-visible');
+        formOverlay.addEventListener('click', e => {
+            const target = e.target;
+            if (target === formOverlay ||
+                target.classList.contains('close')) {
+                formOverlay.classList.remove('is-visible');
+            }
         });
 
-        form.addEventListener('click', event => {
-            event.stopPropagation();
+        btnDell.addEventListener('click', () => {
+            document.querySelectorAll('.delete').forEach(del => {
+                del.classList.toggle('is-visible');
+            });
         });
 
-        formOverlay.addEventListener('click', () => {
-            formOverlay.classList.remove('is-visible');
+        list.addEventListener('click', e => {
+            const target = e.target;
+            if (target.closest('.del-icon')) {
+                target.closest('.contact').remove();
+            }
+        });
+
+        const sortArray = (a, b) => {
+            return a.surname.localeCompare(b.surname);
+        }
+
+        list.addEventListener('click', e => {
+            const target = e.target;
+            if (target.closest('.first-name') ||
+            target.closest('.sur-name')) {
+                const newArrey = data.sort(sortArray);
+
+                const oldRows = document.querySelectorAll('.contact');
+                oldRows.forEach(del => {
+                    del.classList.add('delete');
+                });
+                
+                const newRow = renderContacts(list, newArrey);
+                newRow.forEach((el) => {
+                    el.classList.add('new-row');
+                })
+
+                const tdName = document.querySelectorAll('.first-name');
+                tdName.forEach((el) => {
+                    el.classList.remove('first-name');
+                    el.classList.add('back');
+                });
+                const tdSurname = document.querySelectorAll('.sur-name');
+                tdSurname.forEach((el) => {
+                    el.classList.remove('sur-name');
+                    el.classList.add('back');
+                });
+                return newRow;
+            }
+            if (target.closest('.back')) {
+                const oldRows = document.querySelectorAll('.contact');
+                oldRows.forEach(del => {
+                    del.classList.remove('delete');
+                });
+                const newRow = document.querySelectorAll('.new-row');
+                newRow.forEach((el) => {
+                    el.classList.add('delete');
+                });
+
+                return oldRows;
+            }  
         });
     };
 
