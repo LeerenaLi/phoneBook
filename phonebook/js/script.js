@@ -311,28 +311,27 @@ let data = [
         list.append(createRow(contact));
     };
 
-    const setStorage = (contact) => {
-        const arrData = JSON.parse(localStorage.getItem('data')) || [];
+    const getStorage = data => JSON.parse(localStorage.getItem('data')) || [];
+
+    const setStorage = (data, contact) => {
+        localStorage.setItem('data', JSON.stringify(getStorage));
+
+        console.log(getStorage('data'));
 
         localStorage.setItem('contact', JSON.stringify(contact));
-        const ObjContact = JSON.parse(localStorage.getItem('contact'));
-        arrData.push(ObjContact);
-        localStorage.setItem('data', JSON.stringify(arrData));
-        console.log('arrData: ', arrData);
-    };
-
+        // const ObjContact = JSON.parse(localStorage.getItem('contact'));
+        // data.push(contact);
+    }
 
     const formControl = (form, list, closeModal) => {
         form.addEventListener('submit', e => {
             e.preventDefault();
-
             const formData = new FormData(e.target);
-
             const newContact = Object.fromEntries(formData);
-
             addContactPage(newContact, list);
             // addContactData(newContact);
-            setStorage(newContact);
+            setStorage('data', newContact);
+            data.push(newContact);
             form.reset();
             closeModal();
         });
@@ -358,6 +357,7 @@ let data = [
         hoverRow(allRow, logo);
         deleteControl(btnDell, list);
         formControl(form, list, closeModal);
+        getStorage('data');
 
         const sortArray = (a, b) => a.surname.localeCompare(b.surname);
 
