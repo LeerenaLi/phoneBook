@@ -314,14 +314,12 @@ let data = [
     const getStorage = data => JSON.parse(localStorage.getItem('data')) || [];
 
     const setStorage = (data, contact) => {
-        localStorage.setItem('data', JSON.stringify(getStorage));
+        localStorage.setItem('data', JSON.stringify(data, contact));
 
         console.log(getStorage('data'));
 
-        localStorage.setItem('contact', JSON.stringify(contact));
-        // const ObjContact = JSON.parse(localStorage.getItem('contact'));
-        // data.push(contact);
-    }
+        // localStorage.setItem('contact', JSON.stringify(contact));
+    };
 
     const formControl = (form, list, closeModal) => {
         form.addEventListener('submit', e => {
@@ -330,8 +328,9 @@ let data = [
             const newContact = Object.fromEntries(formData);
             addContactPage(newContact, list);
             // addContactData(newContact);
-            setStorage('data', newContact);
             data.push(newContact);
+            setStorage('data', data);
+
             form.reset();
             closeModal();
         });
