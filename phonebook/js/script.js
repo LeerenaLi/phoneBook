@@ -1,33 +1,33 @@
 'use strict';
 
 let data = [
-    {
-        name: 'Иван',
-        surname: 'Петров',
-        phone: '+79514545454',
-    },
-    {
-        name: 'Игорь',
-        surname: 'Семёнов',
-        phone: '+79999999999',
-    },
-    {
-        name: 'Семён',
-        surname: 'Иванов',
-        phone: '+79800252525',
-    },
-    {
-        name: 'Мария',
-        surname: 'Попова',
-        phone: '+79876543210',
-    },
+    // {
+    //     name: 'Иван',
+    //     surname: 'Петров',
+    //     phone: '+79514545454',
+    // },
+    // {
+    //     name: 'Игорь',
+    //     surname: 'Семёнов',
+    //     phone: '+79999999999',
+    // },
+    // {
+    //     name: 'Семён',
+    //     surname: 'Иванов',
+    //     phone: '+79800252525',
+    // },
+    // {
+    //     name: 'Мария',
+    //     surname: 'Попова',
+    //     phone: '+79876543210',
+    // },
 ];
 
 
 {
     const addContactData = (contact) => {
         data.push(contact);
-        console.log('data: ', data);
+        // console.log('data: ', data);
     };
 
     const createContainer = () => {
@@ -311,6 +311,17 @@ let data = [
         list.append(createRow(contact));
     };
 
+    const setStorage = (contact) => {
+        const arrData = JSON.parse(localStorage.getItem('data')) || [];
+
+        localStorage.setItem('contact', JSON.stringify(contact));
+        const ObjContact = JSON.parse(localStorage.getItem('contact'));
+        arrData.push(ObjContact);
+        localStorage.setItem('data', JSON.stringify(arrData));
+        console.log('arrData: ', arrData);
+    };
+
+
     const formControl = (form, list, closeModal) => {
         form.addEventListener('submit', e => {
             e.preventDefault();
@@ -320,7 +331,8 @@ let data = [
             const newContact = Object.fromEntries(formData);
 
             addContactPage(newContact, list);
-            addContactData(newContact);
+            // addContactData(newContact);
+            setStorage(newContact);
             form.reset();
             closeModal();
         });
@@ -341,6 +353,7 @@ let data = [
         // Функционал
         const allRow = renderContacts(list, data);
         const {closeModal} = modalControl(btnAdd, formOverlay);
+        // addContactData();
 
         hoverRow(allRow, logo);
         deleteControl(btnDell, list);
