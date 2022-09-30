@@ -344,16 +344,21 @@
 
         const table = document.querySelector('.table');
 
-        const sortArrayName = (a, b) => a.name.localeCompare(b.name);
-
-        const sortArraySurname = (a, b) => a.surname.localeCompare(b.surname);
+        const sortArray = param => {
+            if (param === 'surname') {
+                return ((a, b) => a.surname.localeCompare(b.surname));
+            }
+            if (param === 'name') {
+                return ((a, b) => a.name.localeCompare(b.name));
+            }
+        };
 
         table.addEventListener('click', e => {
             const target = e.target;
             console.log('target: ', target);
             if (target.closest('.sort-surname')) {
                 const dataArr = getStorage('dataArr');
-                const newArrey = dataArr.sort(sortArraySurname);
+                const newArrey = dataArr.sort(sortArray('surname'));
                 setStorage(newArrey);
                 console.log('newArrey: ', newArrey);
 
@@ -367,7 +372,7 @@
             }
             if (target.closest('.sort-name')) {
                 const dataArr = getStorage('dataArr');
-                const newArrey = dataArr.sort(sortArrayName);
+                const newArrey = dataArr.sort(sortArray('name'));
                 setStorage(newArrey);
                 console.log('newArrey: ', newArrey);
 
