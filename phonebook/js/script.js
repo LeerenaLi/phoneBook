@@ -99,11 +99,12 @@
         table.classList.add('table', 'table-striped');
 
         const thead = document.createElement('thead');
+
         thead.insertAdjacentHTML('beforeend', `
             <tr>
                 <th class="delete">Удалить</th>
-                <th>Имя</th>
-                <th>Фамилия</th>
+                <th class="sort-name">Имя</th>
+                <th class="sort-surname">Фамилия</th>
                 <th>Телефон</th>
             </tr>
         `);
@@ -341,14 +342,18 @@
         deleteControl(btnDell, list);
         formControl(form, list, closeModal);
 
-        const sortArray = (a, b) => a.surname.localeCompare(b.surname);
+        const table = document.querySelector('.table');
 
-        list.addEventListener('click', e => {
+        const sortArrayName = (a, b) => a.name.localeCompare(b.name);
+
+        const sortArraySurname = (a, b) => a.surname.localeCompare(b.surname);
+
+        table.addEventListener('click', e => {
             const target = e.target;
-            if (target.closest('.first-name') ||
-            target.closest('.sur-name')) {
+            console.log('target: ', target);
+            if (target.closest('.sort-surname')) {
                 const dataArr = getStorage('dataArr');
-                const newArrey = dataArr.sort(sortArray);
+                const newArrey = dataArr.sort(sortArraySurname);
                 setStorage(newArrey);
                 console.log('newArrey: ', newArrey);
 
@@ -358,35 +363,21 @@
                 });
 
                 const newRow = renderContacts(list, newArrey);
-                newRow.forEach((el) => {
-                    el.classList.add('new-row');
-                });
-
-                const tdName = document.querySelectorAll('.first-name');
-                tdName.forEach((el) => {
-                    el.classList.remove('first-name');
-                    el.classList.add('back');
-                });
-                const tdSurname = document.querySelectorAll('.sur-name');
-                tdSurname.forEach((el) => {
-                    el.classList.remove('sur-name');
-                    el.classList.add('back');
-                });
                 return newRow;
             }
-            if (target.closest('.back')) {
-                const data = getStorage();
-                setStorage(data);
+            if (target.closest('.sort-name')) {
+                const dataArr = getStorage('dataArr');
+                const newArrey = dataArr.sort(sortArrayName);
+                setStorage(newArrey);
+                console.log('newArrey: ', newArrey);
+
                 const oldRows = document.querySelectorAll('.contact');
                 oldRows.forEach(del => {
-                    del.classList.remove('delete');
-                });
-                const newRow = document.querySelectorAll('.new-row');
-                newRow.forEach((el) => {
-                    el.classList.add('delete');
+                    del.classList.add('delete');
                 });
 
-                return oldRows;
+                const newRow = renderContacts(list, newArrey);
+                return newRow;
             }
         });
     };
