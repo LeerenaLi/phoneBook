@@ -347,8 +347,10 @@
             const target = e.target;
             if (target.closest('.first-name') ||
             target.closest('.sur-name')) {
-                const newArrey = data.sort(sortArray);
+                const dataArr = getStorage('dataArr');
+                const newArrey = dataArr.sort(sortArray);
                 setStorage(newArrey);
+                console.log('newArrey: ', newArrey);
 
                 const oldRows = document.querySelectorAll('.contact');
                 oldRows.forEach(del => {
