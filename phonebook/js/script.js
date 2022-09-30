@@ -1,33 +1,24 @@
 'use strict';
 
-let data = [
-    // {
-    //     name: 'Иван',
-    //     surname: 'Петров',
-    //     phone: '+79514545454',
-    // },
-    // {
-    //     name: 'Игорь',
-    //     surname: 'Семёнов',
-    //     phone: '+79999999999',
-    // },
-    // {
-    //     name: 'Семён',
-    //     surname: 'Иванов',
-    //     phone: '+79800252525',
-    // },
-    // {
-    //     name: 'Мария',
-    //     surname: 'Попова',
-    //     phone: '+79876543210',
-    // },
-];
-
-
 {
+    const getStorage = () => JSON.parse(localStorage.getItem('dataArr')) || [];
+
+    const setStorage = (contact) => {
+        localStorage.setItem('dataArr', JSON.stringify(contact));
+    };
+
     const addContactData = (contact) => {
-        data.push(contact);
-        // console.log('data: ', data);
+        const dataArr = getStorage('dataArr');
+        dataArr.push(contact);
+        setStorage(dataArr);
+        console.log('dataArr: ', dataArr);
+    };
+
+    const removeStorage = (phone) => {
+        const dataArr = getStorage('dataArr');
+        const newArr = dataArr.filter(item => item.phone !== phone);
+        setStorage(newArr);
+        console.log('newArr: ', newArr);
     };
 
     const createContainer = () => {
@@ -301,8 +292,10 @@ let data = [
 
         list.addEventListener('click', e => {
             const target = e.target;
+            const phone = target.closest('tr').querySelector('a').innerHTML;
             if (target.closest('.del-icon')) {
                 target.closest('.contact').remove();
+                removeStorage(phone);
             }
         });
     };
@@ -311,25 +304,15 @@ let data = [
         list.append(createRow(contact));
     };
 
-    const getStorage = data => JSON.parse(localStorage.getItem('data')) || [];
-
-    const setStorage = (data, contact) => {
-        localStorage.setItem('data', JSON.stringify(data, contact));
-
-        console.log(getStorage('data'));
-
-        // localStorage.setItem('contact', JSON.stringify(contact));
-    };
-
     const formControl = (form, list, closeModal) => {
         form.addEventListener('submit', e => {
             e.preventDefault();
             const formData = new FormData(e.target);
+
             const newContact = Object.fromEntries(formData);
+
             addContactPage(newContact, list);
-            // addContactData(newContact);
-            data.push(newContact);
-            setStorage('data', data);
+            addContactData(newContact);
 
             form.reset();
             closeModal();
@@ -337,6 +320,7 @@ let data = [
     };
 
     const init = (selectorApp, title) => {
+        const data = getStorage();
         const app = document.querySelector(selectorApp);
 
         const {
@@ -356,7 +340,6 @@ let data = [
         hoverRow(allRow, logo);
         deleteControl(btnDell, list);
         formControl(form, list, closeModal);
-        getStorage('data');
 
         const sortArray = (a, b) => a.surname.localeCompare(b.surname);
 
@@ -365,6 +348,7 @@ let data = [
             if (target.closest('.first-name') ||
             target.closest('.sur-name')) {
                 const newArrey = data.sort(sortArray);
+                setStorage(newArrey);
 
                 const oldRows = document.querySelectorAll('.contact');
                 oldRows.forEach(del => {
@@ -389,6 +373,8 @@ let data = [
                 return newRow;
             }
             if (target.closest('.back')) {
+                const data = getStorage();
+                setStorage(data);
                 const oldRows = document.querySelectorAll('.contact');
                 oldRows.forEach(del => {
                     del.classList.remove('delete');
