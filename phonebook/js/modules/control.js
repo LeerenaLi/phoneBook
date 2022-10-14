@@ -1,11 +1,14 @@
 import createEl from './createElements.js';
 import service from './serviceStorages.js';
+import {renderContacts} from './render.js';
 
 const {
     createRow,
 } = createEl;
 
 const {
+    getStorage,
+    setStorage,
     addContactData,
     removeStorage,
 } = service;
@@ -83,10 +86,42 @@ export const formControl = (form, list, closeModal) => {
     });
 };
 
-// export default {
-//     hoverRow,
-//     modalControl,
-//     deleteControl,
-//     addContactPage,
-//     formControl,
-// };
+const sortArray = param => {
+    if (param === 'surname') {
+        return ((a, b) => a.surname.localeCompare(b.surname));
+    }
+    if (param === 'name') {
+        return ((a, b) => a.name.localeCompare(b.name));
+    }
+};
+
+export const sortName = (list) => {
+    const table = document.querySelector('.table');
+    table.addEventListener('click', e => {
+        const target = e.target;
+        const dataArr = getStorage('dataArr');
+
+        const findParam = () => {
+            if (target.closest('.sort-surname')) {
+                const param = 'surname';
+                return param;
+            }
+            if (target.closest('.sort-name')) {
+                const param = 'name';
+                return param;
+            }
+        };
+        const param = findParam();
+
+        const newArray = dataArr.sort(sortArray(param));
+        setStorage(newArray);
+
+        const oldRows = document.querySelectorAll('.contact');
+        oldRows.forEach(del => {
+            del.classList.add('delete');
+        });
+
+        const newRow = renderContacts(list, newArray);
+        return newRow;
+    });
+};
