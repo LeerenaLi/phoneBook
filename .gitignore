@@ -3,6 +3,9 @@
 # dependencies
 /node_modules
 
+# убрать при сборке в продакшен
+/dist  
+
 /.idea
 /.vscode
 /.eslintrc

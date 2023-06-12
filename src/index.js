@@ -1,6 +1,10 @@
-import * as control from './modules/control.js';
-import {renderPhoneBook, renderContacts} from './modules/render.js';
-import service from './modules/serviceStorages.js';
+import * as control from './js/control';
+import {renderPhoneBook, renderContacts} from './js/render';
+import service from './js/serviceStorages';
+
+// import './index.html'; // пока идет разработка, убрать при сборке в продакшен
+
+import './scss/index.scss';
 
 const {
     getStorage,
@@ -31,5 +35,6 @@ const {
         control.sortName(list);
     };
 
-    window.phoneBookInit = init;
+    init('#app', 'Елена');
 }
+

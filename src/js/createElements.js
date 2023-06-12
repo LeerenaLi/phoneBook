@@ -1,3 +1,11 @@
+import image from '../img/icon.svg';
+
+const createImageLogo = () => {
+    const img = document.createElement('img');
+    img.src = image;
+    return img;
+};
+
 const createContainer = () => {
     const container = document.createElement('div');
     container.classList.add('container');
@@ -79,7 +87,7 @@ const createTable = () => {
 
     thead.insertAdjacentHTML('beforeend', `
         <tr>
-            <th class="delete">Удалить</th>
+            <th class="del">Удалить</th>
             <th class="sort-name">Имя</th>
             <th class="sort-surname">Фамилия</th>
             <th>Телефон</th>
@@ -185,6 +193,7 @@ const createRow = ({name: firstName, surname, phone}) => {
 };
 
 export default {
+    createImageLogo,
     createContainer,
     createHeader,
     createFooter,

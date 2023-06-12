@@ -1,6 +1,6 @@
-import createEl from './createElements.js';
-import service from './serviceStorages.js';
-import {renderContacts} from './render.js';
+import createEl from './createElements';
+import service from './serviceStorages';
+import {renderContacts} from './render';
 
 const {
     createRow,
